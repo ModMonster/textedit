@@ -85,6 +85,7 @@ class _TaskState extends State<Task> {
                       onPressed: () {
                         Navigator.pop(context);
                         widget.deleteTask(widget.taskData);
+                        saveTaskList();
                       },
                     ),
                     // cancel
@@ -112,6 +113,7 @@ class _TaskState extends State<Task> {
                         setState(() {
                           widget.taskData.name = nameController.text;
                         });
+                        saveTaskList();
                       },
                     ),
                   ],
