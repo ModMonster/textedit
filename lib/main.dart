@@ -83,6 +83,10 @@ Future<void> saveTaskList() async {
 }
 
 Future<void> restoreLists() async {
+  // reset lists
+  noteList = [];
+  taskList = [];
+
   final prefs = await SharedPreferences.getInstance();
 
   // set note list
@@ -103,9 +107,7 @@ Future<void> restoreLists() async {
 }
 
 void main() {
-  restoreLists().whenComplete(() {
-    return runApp(Phoenix(child: App()));
-  });
+  return runApp(Phoenix(child: App()));
 }
 
 class App extends StatefulWidget {
@@ -128,7 +130,9 @@ class _AppState extends State<App> {
 
   void _reload() {
     initPreferences().whenComplete(() {
-      setState((){_currentState = FinalApp();});
+      restoreLists().whenComplete(() {
+        setState((){_currentState = FinalApp();});
+      });
     });
   }
 }
