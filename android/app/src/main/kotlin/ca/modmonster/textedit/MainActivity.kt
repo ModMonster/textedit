@@ -1,4 +1,4 @@
-package com.modmonster.text_edit
+package ca.modmonster.textedit
 
 import io.flutter.embedding.android.FlutterActivity
 
