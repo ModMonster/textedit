@@ -27,6 +27,7 @@ dependencies:
   path_provider: "^2.1.5"
   url_launcher: "^6.3.2"
   flutter_phoenix: "^1.1.1"
+  animations: ^2.1.1
 
 dev_dependencies:
   flutter_test:

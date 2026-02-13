@@ -1,3 +1,4 @@
+import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:text_edit/pages/about.dart';
 import 'package:text_edit/pages/edit.dart';
@@ -171,12 +172,25 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  PageController _pageController = PageController();
+  late final List<Widget> screens;
 
   @override
-  void dispose() {
-    _pageController.dispose();
-    super.dispose();
+  void initState() {
+    screens = [
+      Padding(
+        padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
+        child: ListView(
+          children: noteList.map((note){return Note(note, tapNote);}).toList()
+        ),
+      ),
+      Padding(
+        padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
+        child: ListView(
+          children: taskList.map((task) {return Task(task, deleteTask);}).toList()
+        ),
+      )
+    ];
+    super.initState();
   }
 
   void replaceNote(NoteData currentData, NoteData newData) {
@@ -320,56 +334,30 @@ class _HomePageState extends State<HomePage> {
           SizedBox(width: 10)
         ],
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: [
+      bottomNavigationBar: NavigationBar(
+        destinations: [
           // notes
-          BottomNavigationBarItem(
+          NavigationDestination(
             label: "Notes",
-            icon: Icon(Icons.notes)
+            icon: Icon(Icons.notes),
           ),
           // tasks
-          BottomNavigationBarItem(
+          NavigationDestination(
             label: "Tasks",
             icon: Icon(Icons.task_alt)
           ),
         ],
-        currentIndex: navigationIndex,
-        onTap: (index) {
+        selectedIndex: navigationIndex,
+        onDestinationSelected: (index) {
           setState(() {
             navigationIndex = index;
-            _pageController.animateToPage(index, duration: Duration(milliseconds: 500), curve: Curves.easeOutCubic);
           });
         },
       ),
-      body: SizedBox.expand(
-        child: PageView(
-          controller: _pageController,
-          onPageChanged: (index) {
-            setState(() => navigationIndex = index);
-          },
-          children: <Widget>[
-            notesPage(),
-            tasksPage(),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget notesPage() {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
-      child: ListView(
-        children: noteList.map((note){return Note(note, tapNote);}).toList()
-      ),
-    );
-  }
-
-  Widget tasksPage() {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
-      child: ListView(
-        children: taskList.map((task) {return Task(task, deleteTask);}).toList()
+      body: PageTransitionSwitcher(
+        transitionBuilder: (child, primaryAnimation, secondaryAnimation) =>
+            FadeThroughTransition(animation: primaryAnimation, secondaryAnimation: secondaryAnimation, child: child),
+        child: screens[navigationIndex],
       ),
     );
   }
