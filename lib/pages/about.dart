@@ -21,16 +21,16 @@ class AboutPage extends StatelessWidget {
           // version
           ListTile(
             title: Text("Version"),
-            subtitle: Text("v1.0.0"),
+            subtitle: Text("v2.0.0"),
           ),
           ListTile(
             title: Text("View on GitHub"),
-            onTap: () {launch("https://github.com/modmonster/textedit");},
+            onTap: () {launchUrl(Uri.parse("https://github.com/modmonster/textedit"));},
           ),
           ListTile(
             title: Text("Made by ModMonster"),
             subtitle: InkWell(
-              onTap: () {launch("https://youtube.com/modmonster");},
+              onTap: () {launchUrl(Uri.parse("https://youtube.com/modmonster"));},
               child: Text(
                 "https://youtube.com/modmonster",
                 style: TextStyle(

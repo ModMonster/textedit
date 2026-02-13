@@ -13,10 +13,9 @@ class EditPage extends StatelessWidget {
     TextEditingController titleController = TextEditingController(text: noteData.name);
     TextEditingController contentController = TextEditingController(text: noteData.contents);
 
-    return WillPopScope(
-      onWillPop: () async {
+    return PopScope(
+      onPopInvokedWithResult: (didPop, result) async {
         saveNote(noteData, NoteData(titleController.text, contentController.text));
-        return true;
       },
       child: Scaffold(
         appBar: AppBar(

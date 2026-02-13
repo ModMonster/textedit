@@ -152,13 +152,11 @@ class FinalApp extends StatelessWidget {
       },
       themeMode: darkMode? ThemeMode.dark : ThemeMode.light,
       theme: ThemeData(
-        primaryColor: Colors.blueGrey,
-        accentColor: Colors.blueGrey,
+        colorSchemeSeed: Colors.blueGrey,
       ),
       darkTheme: ThemeData(
         brightness: Brightness.dark,
-        primaryColor: Colors.blueGrey,
-        accentColor: Colors.blueGrey,
+        colorSchemeSeed: Colors.blueGrey,
       ),
       debugShowCheckedModeBanner: false,
     );

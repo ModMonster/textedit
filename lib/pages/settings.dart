@@ -276,7 +276,7 @@ class _SettingsPageState extends State<SettingsPage> {
           ListTile(
             title: Text("Report a Bug"),
             leading: Icon(Icons.bug_report),
-            onTap: () {launch("https://github.com/modmonster/textedit/issues/new");},
+            onTap: () {launchUrl(Uri.parse("https://github.com/modmonster/textedit/issues/new"));},
           ),
           // about
           ListTile(
