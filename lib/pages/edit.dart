@@ -24,7 +24,6 @@ class EditPage extends StatelessWidget {
               bottom: Radius.circular(6),
             )
           ),
-          backgroundColor: Colors.blueGrey,
           title: TextField(
             maxLength: 30,
             decoration: InputDecoration(
@@ -32,10 +31,7 @@ class EditPage extends StatelessWidget {
               counterText: "",
               hintText: "Tap to edit title"
             ),
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 20
-            ),
+            style: Theme.of(context).textTheme.titleLarge,
             controller: titleController,
           ),
           actions: [
@@ -51,24 +47,14 @@ class EditPage extends StatelessWidget {
                       actions: [
                         // no
                         TextButton(
-                          child: Text(
-                            "CANCEL",
-                            style: TextStyle(
-                              color: Colors.blue
-                            ),
-                          ),
+                          child: Text("Cancel"),
                           onPressed: () {
                             Navigator.pop(context, "cancel");
                           },
                         ),
                         // yes
                         TextButton(
-                          child: Text(
-                            "DISCARD",
-                            style: TextStyle(
-                              color: Colors.red
-                            ),
-                          ),
+                          child: Text("Discard"),
                           onPressed: () {
                             Navigator.pop(context, "discard");
                             Navigator.pop(context);
@@ -96,24 +82,14 @@ class EditPage extends StatelessWidget {
                       actions: [
                         // no
                         TextButton(
-                          child: Text(
-                            "CANCEL",
-                            style: TextStyle(
-                              color: Colors.blue
-                            ),
-                          ),
+                          child: Text("Cancel"),
                           onPressed: () {
                             Navigator.pop(context, "cancel");
                           },
                         ),
                         // yes
                         TextButton(
-                          child: Text(
-                            "CLEAR",
-                            style: TextStyle(
-                              color: Colors.red
-                            ),
-                          ),
+                          child: Text("Clear"),
                           onPressed: () {
                             Navigator.pop(context, "clear");
                             contentController.text = "";

@@ -24,7 +24,7 @@ class _TaskState extends State<Task> {
       },
       background: Container(
         alignment: AlignmentDirectional.centerStart,
-        color: Colors.red,
+        color: Theme.of(context).colorScheme.error,
         child: Padding(
           padding: const EdgeInsets.fromLTRB(16, 0, 0, 0),
           child: Icon(Icons.delete),
@@ -32,7 +32,7 @@ class _TaskState extends State<Task> {
       ),
       secondaryBackground: Container(
         alignment: AlignmentDirectional.centerEnd,
-        color: Colors.red,
+        color: Theme.of(context).colorScheme.error,
         child: Padding(
           padding: const EdgeInsets.fromLTRB(0, 0, 16, 0),
           child: Icon(Icons.delete),
@@ -51,7 +51,7 @@ class _TaskState extends State<Task> {
           widget.taskData.name.isEmpty? "Unnamed Task" : widget.taskData.name,
           style: TextStyle(
             decoration: widget.taskData.done? TextDecoration.lineThrough : null,
-            color: widget.taskData.done? Colors.grey[400] : null,
+            color: widget.taskData.done? Theme.of(context).colorScheme.onSurface.withAlpha(100) : null,
           ),
         ),
         // edit button
@@ -76,12 +76,7 @@ class _TaskState extends State<Task> {
                   actions: [
                     // delete
                     TextButton(
-                      child: Text(
-                        "DELETE",
-                        style: TextStyle(
-                          color: Colors.red,
-                        ),
-                      ),
+                      child: Text("Delete"),
                       onPressed: () {
                         Navigator.pop(context);
                         widget.deleteTask(widget.taskData);
@@ -90,24 +85,14 @@ class _TaskState extends State<Task> {
                     ),
                     // cancel
                     TextButton(
-                      child: Text(
-                        "CANCEL",
-                        style: TextStyle(
-                          color: Colors.blue,
-                        ),
-                      ),
+                      child: Text("Cancel"),
                       onPressed: () {
                         Navigator.pop(context);
                       },
                     ),
                     // ok
                     TextButton(
-                      child: Text(
-                        "OK",
-                        style: TextStyle(
-                          color: Colors.blue,
-                        ),
-                      ),
+                      child: Text("OK"),
                       onPressed: () {
                         Navigator.pop(context);
                         setState(() {

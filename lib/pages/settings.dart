@@ -26,7 +26,6 @@ class _SettingsPageState extends State<SettingsPage> {
             bottom: Radius.circular(6),
           )
         ),
-        backgroundColor: Colors.blueGrey,
         title: Text("Settings"),
       ),
       body: ListView(
@@ -200,24 +199,14 @@ class _SettingsPageState extends State<SettingsPage> {
                   actions: [
                     // no
                     TextButton(
-                      child: Text(
-                        "CANCEL",
-                        style: TextStyle(
-                          color: Colors.blue
-                        ),
-                      ),
+                      child: Text("Cancel"),
                       onPressed: () {
                         Navigator.pop(context);
                       },
                     ),
                     // yes
                     TextButton(
-                      child: Text(
-                        "CONTINUE",
-                        style: TextStyle(
-                          color: Colors.red
-                        ),
-                      ),
+                      child: Text("OK"),
                       onPressed: () {
                         noteList = [];
                         saveNoteList();
@@ -242,24 +231,14 @@ class _SettingsPageState extends State<SettingsPage> {
                   actions: [
                     // no
                     TextButton(
-                      child: Text(
-                        "CANCEL",
-                        style: TextStyle(
-                          color: Colors.blue
-                        ),
-                      ),
+                      child: Text("Cancel"),
                       onPressed: () {
                         Navigator.pop(context);
                       },
                     ),
                     // yes
                     TextButton(
-                      child: Text(
-                        "CONTINUE",
-                        style: TextStyle(
-                          color: Colors.red
-                        ),
-                      ),
+                      child: Text("OK"),
                       onPressed: () {
                         taskList = [];
                         saveTaskList();

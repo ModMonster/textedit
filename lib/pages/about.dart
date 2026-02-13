@@ -13,7 +13,6 @@ class AboutPage extends StatelessWidget {
             bottom: Radius.circular(6),
           )
         ),
-        backgroundColor: Colors.blueGrey,
         title: Text("About TextEdit"),
       ),
       body: ListView(
@@ -34,7 +33,7 @@ class AboutPage extends StatelessWidget {
               child: Text(
                 "https://youtube.com/modmonster",
                 style: TextStyle(
-                  color: Colors.blue,
+                  color: Theme.of(context).colorScheme.primary,
                   decoration: TextDecoration.underline,
                 ),
               )

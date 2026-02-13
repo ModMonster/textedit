@@ -197,24 +197,14 @@ class _HomePageState extends State<HomePage> {
               actions: [
                 // no
                 TextButton(
-                  child: Text(
-                    "CANCEL",
-                    style: TextStyle(
-                      color: Colors.blue
-                    ),
-                  ),
+                  child: Text("Cancel"),
                   onPressed: () {
                     Navigator.pop(context, "cancel");
                   },
                 ),
                 // yes
                 TextButton(
-                  child: Text(
-                    "DELETE",
-                    style: TextStyle(
-                      color: Colors.red
-                    ),
-                  ),
+                  child: Text("Delete"),
                   onPressed: () {
                     Navigator.pop(context, "delete");
                     setState(() {
@@ -260,7 +250,7 @@ class _HomePageState extends State<HomePage> {
             bottom: Radius.circular(6),
           )
         ),
-        backgroundColor: deleteMode ? Colors.red[400] : Colors.blueGrey,
+        backgroundColor: deleteMode? Theme.of(context).colorScheme.errorContainer : null,
         title: Text("TextEdit"),
         actions: [
           // add
@@ -292,12 +282,7 @@ class _HomePageState extends State<HomePage> {
                       actions: [
                         // ok
                         TextButton(
-                          child: Text(
-                            "OK",
-                            style: TextStyle(
-                              color: Colors.blue,
-                            ),
-                          ),
+                          child: Text("OK"),
                           onPressed: () {
                             Navigator.pop(context);
                             setState(() {
@@ -355,8 +340,6 @@ class _HomePageState extends State<HomePage> {
             _pageController.animateToPage(index, duration: Duration(milliseconds: 500), curve: Curves.easeOutCubic);
           });
         },
-        unselectedItemColor: Colors.blueGrey,
-        selectedItemColor: Colors.blue,
       ),
       body: SizedBox.expand(
         child: PageView(

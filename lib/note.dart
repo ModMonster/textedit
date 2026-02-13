@@ -19,7 +19,7 @@ class Note extends StatelessWidget {
         },
         background: Container(
           alignment: AlignmentDirectional.centerStart,
-          color: Colors.red,
+          color: Theme.of(context).colorScheme.error,
           child: Padding(
             padding: const EdgeInsets.all(16),
             child: Icon(Icons.delete),
@@ -27,7 +27,7 @@ class Note extends StatelessWidget {
         ),
         secondaryBackground: Container(
           alignment: AlignmentDirectional.centerEnd,
-          color: Colors.red,
+          color: Theme.of(context).colorScheme.error,
           child: Padding(
             padding: const EdgeInsets.all(16),
             child: Icon(Icons.delete),
@@ -45,7 +45,7 @@ class Note extends StatelessWidget {
       onTap: (){
         onTap(this, this.noteData, deleteMode);
       },
-      splashColor: deleteMode? Colors.red[200] : Colors.blueGrey[100],
+      splashColor: deleteMode? Theme.of(context).colorScheme.errorContainer : null,
       child: Padding(
         padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
         child: Row(
