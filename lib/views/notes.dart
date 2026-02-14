@@ -19,11 +19,6 @@ class _NotesViewState extends State<NotesView> {
 
     return Scaffold(
       appBar: AppBar(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(
-            bottom: Radius.circular(6),
-          )
-        ),
         backgroundColor: deleteMode? Theme.of(context).colorScheme.errorContainer : null,
         title: Text("TextEdit"),
         actions: [

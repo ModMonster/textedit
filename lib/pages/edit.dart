@@ -21,11 +21,6 @@ class EditPage extends StatelessWidget {
       },
       child: Scaffold(
         appBar: AppBar(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.vertical(
-              bottom: Radius.circular(6),
-            )
-          ),
           title: TextField(
             maxLength: 30,
             decoration: InputDecoration(

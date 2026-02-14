@@ -13,11 +13,6 @@ class TasksView extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(
-            bottom: Radius.circular(6),
-          )
-        ),
         title: Text("TextEdit"),
         actions: [
           // add
