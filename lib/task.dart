@@ -15,7 +15,7 @@ class _TaskTileState extends State<TaskTile> {
   final Box box = Hive.box("tasks");
 
   void showDeleteDialog(BuildContext context) {
-    if (!Hive.box("settings").get("confirm.delete", defaultValue: false)) {
+    if (!Hive.box("settings").get("confirm.delete", defaultValue: true)) {
       box.delete(widget.boxKey);
       return;
     }

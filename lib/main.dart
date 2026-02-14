@@ -4,7 +4,6 @@ import 'package:text_edit/hive/hive_registrar.g.dart';
 import 'package:text_edit/pages/home.dart';
 import 'package:text_edit/pages/note_spacing.dart';
 import 'package:text_edit/pages/settings.dart';
-import 'package:flutter_phoenix/flutter_phoenix.dart';
 
 String version = "2.0.0";
 
@@ -17,7 +16,7 @@ void main() async {
   await Hive.openBox("tasks");
   await Hive.openBox("settings");
 
-  runApp(Phoenix(child: TextEditApp()));
+  runApp(TextEditApp());
 }
 
 class TextEditApp extends StatelessWidget {

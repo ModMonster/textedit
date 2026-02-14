@@ -26,7 +26,6 @@ dependencies:
 
   path_provider: "^2.1.5"
   url_launcher: "^6.3.2"
-  flutter_phoenix: "^1.1.1"
   animations: ^2.1.1
   hive_ce: ^2.19.3
   hive_ce_flutter: ^2.3.4

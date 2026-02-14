@@ -16,7 +16,7 @@ class _NoteTileState extends State<NoteTile> {
   final Box box = Hive.box("notes");
 
   void showDeleteDialog(BuildContext context) {
-    if (!Hive.box("settings").get("confirm.delete", defaultValue: false)) {
+    if (!Hive.box("settings").get("confirm.delete", defaultValue: true)) {
       box.delete(widget.boxKey);
       return;
     }
