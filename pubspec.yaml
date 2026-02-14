@@ -28,6 +28,8 @@ dependencies:
   url_launcher: "^6.3.2"
   flutter_phoenix: "^1.1.1"
   animations: ^2.1.1
+  hive_ce: ^2.19.3
+  hive_ce_flutter: ^2.3.4
 
 dev_dependencies:
   flutter_test:
@@ -35,6 +37,8 @@ dev_dependencies:
   flutter_launcher_icons: "^0.14.4"
   shared_preferences: "^2.0.6"
   flutter_native_splash: ^2.4.7
+  hive_ce_generator: ^1.11.1
+  build_runner: ^2.11.0
 
 flutter_launcher_icons:
   android: "launcher_icon"

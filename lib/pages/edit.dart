@@ -1,20 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:text_edit/main.dart';
+import 'package:hive_ce/hive.dart';
 import 'package:text_edit/note.dart';
 
 class EditPage extends StatelessWidget {
-
-  final Note noteData;
-  EditPage(this.noteData);
+  final int boxKey;
+  final Note note;
+  EditPage(this.boxKey, this.note);
 
   @override
   Widget build(BuildContext context) {
-    TextEditingController titleController = TextEditingController(text: noteData.name);
-    TextEditingController contentController = TextEditingController(text: noteData.contents);
+    TextEditingController titleController = TextEditingController(text: note.name);
+    TextEditingController contentController = TextEditingController(text: note.contents);
 
     return PopScope(
       onPopInvokedWithResult: (didPop, result) async {
-        // saveNote(noteData, Note(titleController.text, contentController.text));
+        if (result == "discard") return;
+        note.name = titleController.text;
+        note.contents = contentController.text;
+        Hive.box("notes").put(boxKey, note);
       },
       child: Scaffold(
         appBar: AppBar(
@@ -39,9 +42,9 @@ class EditPage extends StatelessWidget {
           actions: [
             // discard changes
             IconButton(
-              tooltip: "Discard Changes",
+              tooltip: "Discard changes",
               onPressed: () {
-                if (askDiscard) {
+                if (Hive.box("settings").get("confirm.discard", defaultValue: true)) {
                   showDialog(context: context, builder: (context) {
                     return AlertDialog(
                       title: Text("Discard changes?"),
@@ -51,15 +54,15 @@ class EditPage extends StatelessWidget {
                         TextButton(
                           child: Text("Cancel"),
                           onPressed: () {
-                            Navigator.pop(context, "cancel");
+                            Navigator.pop(context);
                           },
                         ),
                         // yes
                         TextButton(
                           child: Text("Discard"),
                           onPressed: () {
-                            Navigator.pop(context, "discard");
                             Navigator.pop(context);
+                            Navigator.pop(context, "discard");
                           },
                         ),
                       ],
@@ -67,16 +70,16 @@ class EditPage extends StatelessWidget {
                   });
                 } else {
                   // discard
-                  Navigator.pop(context);
+                  Navigator.pop(context, "discard");
                 }
               },
               icon: Icon(Icons.reply)
             ),
             // clear note
             IconButton(
-              tooltip: "Clear Note",
+              tooltip: "Clear note",
               onPressed: () {
-                if (askClear) {
+                if (Hive.box("settings").get("confirm.clear", defaultValue: true)) {
                   showDialog(context: context, builder: (context) {
                     return AlertDialog(
                       title: Text("Clear this note?"),

@@ -1,43 +1,60 @@
 import 'package:flutter/material.dart';
-import 'package:text_edit/main.dart';
+import 'package:hive_ce/hive.dart';
 import 'package:text_edit/pages/edit.dart';
 
-class NoteTile extends StatelessWidget {
-  final Note noteData;
+class NoteTile extends StatefulWidget {
+  final int boxKey;
+  final Note note;
   final bool deleteMode;
+  NoteTile(this.boxKey, this.note, {this.deleteMode = false});
 
-  NoteTile(this.noteData, {this.deleteMode = false});
+  @override
+  State<NoteTile> createState() => _NoteTileState();
+}
+
+class _NoteTileState extends State<NoteTile> {
+  final Box box = Hive.box("notes");
+
+  void showDeleteDialog(BuildContext context) {
+    if (!Hive.box("settings").get("confirm.delete", defaultValue: false)) {
+      box.delete(widget.boxKey);
+      return;
+    }
+
+    // show confirmation dialog
+    showDialog(context: context, builder: (context) {
+      return AlertDialog(
+        title: Text("Delete this note?"),
+        actions: [
+          // no
+          TextButton(
+            child: Text("Cancel"),
+            onPressed: () {
+              Navigator.pop(context, "cancel");
+              setState(() {}); // rebuild because we didn't actually delete
+            },
+          ),
+          // yes
+          TextButton(
+            child: Text("Delete"),
+            onPressed: () {
+              Navigator.pop(context, "delete");
+              box.delete(widget.boxKey);
+            },
+          ),
+        ],
+      ); 
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     // add dismissible?
-    if (swipeDelete) {
+    if (Hive.box("settings").get("swipe_delete", defaultValue: true)) {
       return Dismissible(
         key: UniqueKey(),
         onDismissed: (direction) {
-          // show confirmation dialog
-          showDialog(context: context, builder: (context) {
-            return AlertDialog(
-              title: Text("Delete this note?"),
-              actions: [
-                // no
-                TextButton(
-                  child: Text("Cancel"),
-                  onPressed: () {
-                    Navigator.pop(context, "cancel");
-                  },
-                ),
-                // yes
-                TextButton(
-                  child: Text("Delete"),
-                  onPressed: () {
-                    Navigator.pop(context, "delete");
-                    noteList.remove(noteData);
-                  },
-                ),
-              ],
-            ); 
-          });
+          showDeleteDialog(context);
         },
         background: Container(
           alignment: AlignmentDirectional.centerStart,
@@ -64,41 +81,19 @@ class NoteTile extends StatelessWidget {
 
   Widget noteCard(BuildContext context) {
     return InkWell (
-      onTap: (){
-        if (deleteMode) {
-          // show confirmation dialog
-          showDialog(context: context, builder: (context) {
-            return AlertDialog(
-              title: Text("Delete this note?"),
-              actions: [
-                // no
-                TextButton(
-                  child: Text("Cancel"),
-                  onPressed: () {
-                    Navigator.pop(context, "cancel");
-                  },
-                ),
-                // yes
-                TextButton(
-                  child: Text("Delete"),
-                  onPressed: () {
-                    Navigator.pop(context, "delete");
-                    noteList.remove(noteData);
-                  },
-                ),
-              ],
-            ); 
-          });
+      onTap: () {
+        if (widget.deleteMode) {
+          showDeleteDialog(context);
         } else {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) {return EditPage(noteData);}
+              builder: (context) {return EditPage(widget.boxKey, widget.note);}
             )
           );
         }
       },
-      splashColor: deleteMode? Theme.of(context).colorScheme.errorContainer : null,
+      splashColor: widget.deleteMode? Theme.of(context).colorScheme.errorContainer : null,
       child: Padding(
         padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
         child: Row(
@@ -111,19 +106,19 @@ class NoteTile extends StatelessWidget {
               Container(
                 width: MediaQuery.of(context).size.width*0.8,
                 child: Text(
-                  noteData.name,
+                  widget.note.name,
                   style: TextStyle(
                     fontSize: 30
                   ),
                   overflow: TextOverflow.ellipsis,
                 ),
               ),
-              if (!compactView) ...[
+              if (Hive.box("settings").get("density") != 1) ...[
                 // preview
                 Container(
                   width: MediaQuery.of(context).size.width*0.8,
                   child: Text(
-                    noteData.contents.isEmpty? "Tap to edit note." : noteData.contents,
+                    widget.note.contents.isEmpty? "Tap to edit note." : widget.note.contents,
                     style: TextStyle(
                       fontSize: 18
                     ),
@@ -135,7 +130,7 @@ class NoteTile extends StatelessWidget {
             ]
           ),
           // arrow
-          Icon(deleteMode? Icons.delete : Icons.chevron_right)
+          Icon(widget.deleteMode? Icons.delete : Icons.chevron_right)
         ]
       ),
       )
@@ -147,5 +142,5 @@ class Note {
   String name;
   String contents;
 
-  Note(this.name, this.contents);
+  Note(this.name, {this.contents = ""});
 }

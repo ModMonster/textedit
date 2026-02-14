@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:text_edit/main.dart';
+import 'package:hive_ce/hive_ce.dart';
 import 'package:text_edit/note.dart';
+import 'package:text_edit/pages/edit.dart';
 
 class NotesView extends StatefulWidget {
   const NotesView({super.key});
@@ -10,8 +11,12 @@ class NotesView extends StatefulWidget {
 }
 
 class _NotesViewState extends State<NotesView> {
+  bool deleteMode = false;
+
   @override
   Widget build(BuildContext context) {
+    Box box = Hive.box("notes");
+
     return Scaffold(
       appBar: AppBar(
         shape: RoundedRectangleBorder(
@@ -25,17 +30,21 @@ class _NotesViewState extends State<NotesView> {
           // add
           IconButton(
             icon: Icon(Icons.add),
-            tooltip: "New Note",
-            onPressed: () {
-              setState(() {
-                noteList.insert(0, Note("New Note", ""));
-              });
-              saveNoteList();
+            tooltip: "New note",
+            onPressed: () async {
+              Note note = Note("New note");
+              int boxKey = await box.add(note);
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) {return EditPage(boxKey, note);}
+                )
+              );
             }
           ),
           IconButton(
             icon: Icon(deleteMode ? Icons.cancel : Icons.delete),
-            tooltip: "Delete Notes",
+            tooltip: "Delete notes",
             onPressed: () {
               setState(() {
                 deleteMode = !deleteMode;
@@ -52,9 +61,15 @@ class _NotesViewState extends State<NotesView> {
           )
         ],
       ),
-      body: ListView(
-        children: noteList.map((note) => NoteTile(note)).toList()
-      ),
+      body: StreamBuilder(
+        stream: box.watch(),
+        builder: (context, asyncSnapshot) {
+          return ListView.builder(
+            itemCount: box.length,
+            itemBuilder: (context, index) => NoteTile(box.keyAt(index), box.getAt(index), deleteMode: deleteMode),
+          );
+        }
+      )
     );
   }
 }

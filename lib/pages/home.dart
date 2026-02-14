@@ -1,8 +1,5 @@
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
-import 'package:text_edit/main.dart';
-import 'package:text_edit/note.dart';
-import 'package:text_edit/task.dart';
 import 'package:text_edit/views/notes.dart';
 import 'package:text_edit/views/tasks.dart';
 
@@ -14,19 +11,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  void replaceNote(Note currentData, Note newData) {
-    setState(() {
-      noteList[noteList.indexOf(currentData)] = newData;
-    });
-    saveNoteList();
-  }
-
-  void deleteTask(TaskData taskData) {
-    setState(() {
-      taskList.remove(taskData);
-    });
-  }
-
   int navigationIndex = 0;
 
   @override

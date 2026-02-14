@@ -1,24 +1,57 @@
 import 'package:flutter/material.dart';
-import 'package:text_edit/main.dart';
+import 'package:hive_ce_flutter/hive_flutter.dart';
 
-class Task extends StatefulWidget {
-  final TaskData taskData;
-  Task(this.taskData);
+class TaskTile extends StatefulWidget {
+  final int boxKey;
+  final Task task;
+  TaskTile(this.boxKey, this.task, {super.key});
 
   @override
-  _TaskState createState() => _TaskState();
+  State<TaskTile> createState() => _TaskTileState();
 }
 
-class _TaskState extends State<Task> {
-  TextEditingController nameController = TextEditingController();
+class _TaskTileState extends State<TaskTile> {
+  final TextEditingController nameController = TextEditingController();
+  final Box box = Hive.box("tasks");
+
+  void showDeleteDialog(BuildContext context) {
+    if (!Hive.box("settings").get("confirm.delete", defaultValue: false)) {
+      box.delete(widget.boxKey);
+      return;
+    }
+
+    // show confirmation dialog
+    showDialog(context: context, builder: (context) {
+      return AlertDialog(
+        title: Text("Delete this task?"),
+        actions: [
+          // no
+          TextButton(
+            child: Text("Cancel"),
+            onPressed: () {
+              Navigator.pop(context, "cancel");
+              setState(() {}); // rebuild because we didn't actually delete
+            },
+          ),
+          // yes
+          TextButton(
+            child: Text("Delete"),
+            onPressed: () {
+              Navigator.pop(context, "delete");
+              box.delete(widget.boxKey);
+            },
+          ),
+        ],
+      ); 
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Dismissible(
       key: UniqueKey(),
       onDismissed: (direction) {
-        // widget.deleteTask(widget.taskData);
-        // saveTaskList();
+        showDeleteDialog(context);
       },
       background: Container(
         alignment: AlignmentDirectional.centerStart,
@@ -38,35 +71,33 @@ class _TaskState extends State<Task> {
       ),
       // list tile
       child: CheckboxListTile(
-        value: widget.taskData.done,
+        value: widget.task.done,
         onChanged: (value) {
-          setState(() {
-            widget.taskData.done = value ?? false;
-          });
-          saveTaskList();
+          widget.task.done = value ?? false;
+          box.put(widget.boxKey, widget.task);
         },
         title: Text(
-          widget.taskData.name.isEmpty? "Unnamed Task" : widget.taskData.name,
+          widget.task.name.isEmpty? "Unnamed task" : widget.task.name,
           style: TextStyle(
-            decoration: widget.taskData.done? TextDecoration.lineThrough : null,
-            color: widget.taskData.done? Theme.of(context).colorScheme.onSurface.withAlpha(100) : null,
+            decoration: widget.task.done? TextDecoration.lineThrough : null,
+            color: widget.task.done? Theme.of(context).colorScheme.onSurface.withAlpha(100) : null,
           ),
         ),
         // edit button
         secondary: IconButton(
           onPressed: () {
-            nameController.text = widget.taskData.name;
+            nameController.text = widget.task.name;
             showDialog(
               context: context,
               builder: (context) {
                 return AlertDialog(
-                  title: Text("Edit Task"),
+                  title: Text("Edit task"),
                   content: SizedBox(
                     width: 100,
                     child: TextField(
                       maxLength: 40,
                       decoration: InputDecoration(
-                        hintText: "Task Name",
+                        hintText: "Task name",
                       ),
                       controller: nameController,
                     ),
@@ -77,8 +108,7 @@ class _TaskState extends State<Task> {
                       child: Text("Delete"),
                       onPressed: () {
                         Navigator.pop(context);
-                        // widget.deleteTask(widget.taskData);
-                        saveTaskList();
+                        box.delete(widget.boxKey);
                       },
                     ),
                     // cancel
@@ -93,10 +123,8 @@ class _TaskState extends State<Task> {
                       child: Text("OK"),
                       onPressed: () {
                         Navigator.pop(context);
-                        setState(() {
-                          widget.taskData.name = nameController.text;
-                        });
-                        saveTaskList();
+                        widget.task.name = nameController.text;
+                        box.put(widget.boxKey, widget.task);
                       },
                     ),
                   ],
@@ -111,9 +139,9 @@ class _TaskState extends State<Task> {
   }
 }
 
-class TaskData {
+class Task {
   String name;
   bool done;
 
-  TaskData(this.name, this.done);
+  Task(this.name, {this.done = false});
 }
