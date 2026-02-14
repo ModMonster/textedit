@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:text_edit/main.dart';
+import 'package:text_edit/pages/edit.dart';
 
-class Note extends StatelessWidget {
+class NoteTile extends StatelessWidget {
+  final Note noteData;
+  final bool deleteMode;
 
-  final NoteData noteData;
-  final Function onTap;
-
-  Note(this.noteData, this.onTap);
+  NoteTile(this.noteData, {this.deleteMode = false});
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +15,29 @@ class Note extends StatelessWidget {
       return Dismissible(
         key: UniqueKey(),
         onDismissed: (direction) {
-          onTap(this, this.noteData, true);
+          // show confirmation dialog
+          showDialog(context: context, builder: (context) {
+            return AlertDialog(
+              title: Text("Delete this note?"),
+              actions: [
+                // no
+                TextButton(
+                  child: Text("Cancel"),
+                  onPressed: () {
+                    Navigator.pop(context, "cancel");
+                  },
+                ),
+                // yes
+                TextButton(
+                  child: Text("Delete"),
+                  onPressed: () {
+                    Navigator.pop(context, "delete");
+                    noteList.remove(noteData);
+                  },
+                ),
+              ],
+            ); 
+          });
         },
         background: Container(
           alignment: AlignmentDirectional.centerStart,
@@ -43,7 +65,38 @@ class Note extends StatelessWidget {
   Widget noteCard(BuildContext context) {
     return InkWell (
       onTap: (){
-        onTap(this, this.noteData, deleteMode);
+        if (deleteMode) {
+          // show confirmation dialog
+          showDialog(context: context, builder: (context) {
+            return AlertDialog(
+              title: Text("Delete this note?"),
+              actions: [
+                // no
+                TextButton(
+                  child: Text("Cancel"),
+                  onPressed: () {
+                    Navigator.pop(context, "cancel");
+                  },
+                ),
+                // yes
+                TextButton(
+                  child: Text("Delete"),
+                  onPressed: () {
+                    Navigator.pop(context, "delete");
+                    noteList.remove(noteData);
+                  },
+                ),
+              ],
+            ); 
+          });
+        } else {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) {return EditPage(noteData);}
+            )
+          );
+        }
       },
       splashColor: deleteMode? Theme.of(context).colorScheme.errorContainer : null,
       child: Padding(
@@ -90,9 +143,9 @@ class Note extends StatelessWidget {
   }
 }
 
-class NoteData {
+class Note {
   String name;
   String contents;
 
-  NoteData(this.name, this.contents);
+  Note(this.name, this.contents);
 }

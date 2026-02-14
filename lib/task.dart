@@ -3,9 +3,7 @@ import 'package:text_edit/main.dart';
 
 class Task extends StatefulWidget {
   final TaskData taskData;
-  final Function deleteTask;
-
-  Task(this.taskData, this.deleteTask);
+  Task(this.taskData);
 
   @override
   _TaskState createState() => _TaskState();
@@ -19,8 +17,8 @@ class _TaskState extends State<Task> {
     return Dismissible(
       key: UniqueKey(),
       onDismissed: (direction) {
-        widget.deleteTask(widget.taskData);
-        saveTaskList();
+        // widget.deleteTask(widget.taskData);
+        // saveTaskList();
       },
       background: Container(
         alignment: AlignmentDirectional.centerStart,
@@ -79,7 +77,7 @@ class _TaskState extends State<Task> {
                       child: Text("Delete"),
                       onPressed: () {
                         Navigator.pop(context);
-                        widget.deleteTask(widget.taskData);
+                        // widget.deleteTask(widget.taskData);
                         saveTaskList();
                       },
                     ),

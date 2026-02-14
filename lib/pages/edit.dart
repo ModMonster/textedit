@@ -4,9 +4,8 @@ import 'package:text_edit/note.dart';
 
 class EditPage extends StatelessWidget {
 
-  final NoteData noteData;
-  final Function saveNote;
-  EditPage(this.noteData, this.saveNote);
+  final Note noteData;
+  EditPage(this.noteData);
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +14,7 @@ class EditPage extends StatelessWidget {
 
     return PopScope(
       onPopInvokedWithResult: (didPop, result) async {
-        saveNote(noteData, NoteData(titleController.text, contentController.text));
+        // saveNote(noteData, Note(titleController.text, contentController.text));
       },
       child: Scaffold(
         appBar: AppBar(
@@ -28,6 +27,9 @@ class EditPage extends StatelessWidget {
             maxLength: 30,
             decoration: InputDecoration(
               border: InputBorder.none,
+              focusedBorder: UnderlineInputBorder(
+                borderSide: BorderSide(color: Theme.of(context).colorScheme.primary)
+              ),
               counterText: "",
               hintText: "Tap to edit title"
             ),
@@ -107,7 +109,7 @@ class EditPage extends StatelessWidget {
           ],
         ),
         body: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
           child: Container(
             height: double.infinity,
             child: TextField(

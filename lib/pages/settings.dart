@@ -20,248 +20,281 @@ class _SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(
-            bottom: Radius.circular(6),
-          )
-        ),
-        title: Text("Settings"),
-      ),
-      body: ListView(
-        children: [
-          // dark mode
-          SwitchListTile(
-            title: Text("Dark Mode"),
-            secondary: Icon(Icons.dark_mode),
-            value: darkMode,
-            onChanged: (value) {
-              _setBool("darkMode", value).whenComplete(() {
-                return setState(() {
-                  darkMode = value;
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text("Restart TextEdit to apply changes."),
-                      action: SnackBarAction(
-                        label: "RESTART",
-                        onPressed: () {
-                          Phoenix.rebirth(context);
-                        },
-                      )
-                    )
+      body: CustomScrollView(
+        slivers: [
+          SliverAppBar.large(
+            title: Text("Settings"),
+          ),
+          SliverList.list(
+            children: [
+              // dark mode
+              ListTile(
+                title: Text("Theme"),
+                subtitle: Text(darkMode? "Dark" : "Light"),
+                leading: Icon(Icons.palette_outlined),
+                onTap: () {
+                  showDialog(context: context, builder: (context) {
+                    return AlertDialog(
+                      title: Text("Choose theme"),
+                      contentPadding: EdgeInsets.only(top: 8.0),
+                      content: StatefulBuilder(
+                        builder: (context, setState2) {
+                          // Putting this directly in doesn't work.
+                          // Do not ask me why, I have literally no idea.
+                          // int val = box.get("theme", defaultValue: 0);
+                          
+                          return RadioGroup(
+                            groupValue: darkMode? 0 : 1,
+                            onChanged: (value) {
+                              if (value == null) return;
+                              setState2(() {
+                                // box.put("theme", value);
+                              });
+                            },
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                RadioListTile(
+                                  value: 1,
+                                  title: Text("Light"),
+                                ),
+                                RadioListTile(
+                                  value: 2,
+                                  title: Text("Dark"),
+                                ),
+                                RadioListTile(
+                                  value: 0,
+                                  title: Text("System default"),
+                                ),
+                              ],
+                            ),
+                          );
+                        }
+                      ),
+                      actions: [
+                        TextButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          child: Text("OK")
+                        )
+                      ],
+                    );
+                  });
+                },
+              ),
+              // compact view
+              ListTile(
+                title: Text("Note density"),
+                leading: Icon(Icons.view_compact_rounded),
+                subtitle: Text("Comfortable"),
+                onTap: () {
+                  Navigator.pushNamed(context, "/settings/note_spacing");
+                },
+              ),
+              // ask when deleting
+              SwitchListTile(
+                title: Text("Swipe to delete notes"),
+                secondary: Icon(Icons.delete_sweep),
+                value: swipeDelete,
+                onChanged: (value) {setState(() {
+                  _setBool("swipeDelete", value).whenComplete(() {
+                    return setState(() {
+                      swipeDelete = value;
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text("Restart TextEdit to apply changes."),
+                          action: SnackBarAction(
+                            label: "RESTART",
+                            onPressed: () {
+                              Phoenix.rebirth(context);
+                            },
+                          )
+                        )
+                      );
+                    }
                   );
+                  });
+                });
                 }
-              );
-              });
-            }
-          ),
-          // compact view
-          SwitchListTile(
-            title: Text("Compact View"),
-            secondary: Icon(Icons.view_compact_rounded),
-            value: compactView,
-            onChanged: (value) {setState(() {
-              _setBool("compactView", value).whenComplete(() {
-                return setState(() {
-                  compactView = value;
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text("Restart TextEdit to apply changes."),
-                      action: SnackBarAction(
-                        label: "RESTART",
-                        onPressed: () {
-                          Phoenix.rebirth(context);
-                        },
-                      )
-                    )
+              ),
+              Divider(),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                child: Text(
+                  "Require confirmation when:",
+                  style: Theme.of(context).textTheme.bodyLarge,
+                ),
+              ),
+              // ask when deleting
+              SwitchListTile(
+                title: Text("Deleting notes and tasks"),
+                secondary: Icon(Icons.delete),
+                value: askDelete,
+                onChanged: (value) {setState(() {
+                  _setBool("askDelete", value).whenComplete(() {
+                    return setState(() {
+                      askDelete = value;
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text("Restart TextEdit to apply changes."),
+                          action: SnackBarAction(
+                            label: "RESTART",
+                            onPressed: () {
+                              Phoenix.rebirth(context);
+                            },
+                          )
+                        )
+                      );
+                    }
                   );
+                  });
+                });
                 }
-              );
-              });
-            });}
-          ),
-          // ask when deleting
-          CheckboxListTile(
-            title: Text("Swipe to delete notes"),
-            secondary: Icon(Icons.delete_sweep),
-            value: swipeDelete,
-            onChanged: (value) {setState(() {
-              _setBool("swipeDelete", value ?? false).whenComplete(() {
-                return setState(() {
-                  swipeDelete = value ?? false;
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text("Restart TextEdit to apply changes."),
-                      action: SnackBarAction(
-                        label: "RESTART",
-                        onPressed: () {
-                          Phoenix.rebirth(context);
-                        },
-                      )
-                    )
+              ),
+              // ask when discarding
+              SwitchListTile(
+                title: Text("Discarding note changes"),
+                secondary: Icon(Icons.reply),
+                value: askDiscard,
+                onChanged: (value) {setState(() {
+                  _setBool("askDiscard", value).whenComplete(() {
+                    return setState(() {
+                      askDiscard = value;
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text("Restart TextEdit to apply changes."),
+                          action: SnackBarAction(
+                            label: "RESTART",
+                            onPressed: () {
+                              Phoenix.rebirth(context);
+                            },
+                          )
+                        )
+                      );
+                    }
                   );
+                  });
+                });
                 }
-              );
-              });
-            });
-            }
-          ),
-          Divider(),
-          // ask when deleting
-          CheckboxListTile(
-            title: Text("Ask for confirmation when deleting notes"),
-            secondary: Icon(Icons.delete),
-            value: askDelete,
-            onChanged: (value) {setState(() {
-              _setBool("askDelete", value ?? false).whenComplete(() {
-                return setState(() {
-                  askDelete = value ?? false;
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text("Restart TextEdit to apply changes."),
-                      action: SnackBarAction(
-                        label: "RESTART",
-                        onPressed: () {
-                          Phoenix.rebirth(context);
-                        },
-                      )
-                    )
+              ),
+              // ask when clearing
+              SwitchListTile(
+                title: Text("Clearing note contents"),
+                secondary: Icon(Icons.clear_all),
+                value: askClear,
+                onChanged: (value) {setState(() {
+                  _setBool("askClear", value).whenComplete(() {
+                    return setState(() {
+                      askClear = value;
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text("Restart TextEdit to apply changes."),
+                          action: SnackBarAction(
+                            label: "RESTART",
+                            onPressed: () {
+                              Phoenix.rebirth(context);
+                            },
+                          )
+                        )
+                      );
+                    }
                   );
+                  });
+                });
                 }
-              );
-              });
-            });
-            }
-          ),
-          // ask when discarding
-          CheckboxListTile(
-            title: Text("Ask for confirmation when discarding changes"),
-            secondary: Icon(Icons.reply),
-            value: askDiscard,
-            onChanged: (value) {setState(() {
-              _setBool("askDiscard", value ?? false).whenComplete(() {
-                return setState(() {
-                  askDiscard = value ?? false;
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text("Restart TextEdit to apply changes."),
-                      action: SnackBarAction(
-                        label: "RESTART",
-                        onPressed: () {
-                          Phoenix.rebirth(context);
-                        },
-                      )
-                    )
+              ),
+              Divider(),
+              // delete all notes
+              ListTile(
+                title: Text("Delete all notes"),
+                leading: Icon(Icons.delete_forever_outlined),
+                onTap: () {
+                  showDialog(
+                    context: context,
+                    builder: (context) {return AlertDialog(
+                      title: Text("Are you sure?"),
+                      content: Text("All of your notes will be permanently deleted."),
+                      actions: [
+                        // no
+                        TextButton(
+                          child: Text("Cancel"),
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                        ),
+                        // yes
+                        TextButton(
+                          child: Text("OK"),
+                          onPressed: () {
+                            noteList = [];
+                            saveNoteList();
+                            Phoenix.rebirth(context);
+                          },
+                        ),
+                      ],
+                    );}
                   );
-                }
-              );
-              });
-            });
-            }
-          ),
-          // ask when clearing
-          CheckboxListTile(
-            title: Text("Ask for confirmation when clearing notes"),
-            secondary: Icon(Icons.clear_all),
-            value: askClear,
-            onChanged: (value) {setState(() {
-              _setBool("askClear", value ?? false).whenComplete(() {
-                return setState(() {
-                  askClear = value ?? false;
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text("Restart TextEdit to apply changes."),
-                      action: SnackBarAction(
-                        label: "RESTART",
-                        onPressed: () {
-                          Phoenix.rebirth(context);
-                        },
-                      )
-                    )
+                },
+              ),
+              // delete all tasks
+              ListTile(
+                title: Text("Delete all tasks"),
+                leading: Icon(Icons.delete_forever_outlined),
+                onTap: () {
+                  showDialog(
+                    context: context,
+                    builder: (context) {return AlertDialog(
+                      title: Text("Are you sure?"),
+                      content: Text("All of your tasks will be permanently deleted."),
+                      actions: [
+                        // no
+                        TextButton(
+                          child: Text("Cancel"),
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                        ),
+                        // yes
+                        TextButton(
+                          child: Text("OK"),
+                          onPressed: () {
+                            taskList = [];
+                            saveTaskList();
+                            Phoenix.rebirth(context);
+                          },
+                        ),
+                      ],
+                    );}
                   );
-                }
-              );
-              });
-            });
-            }
-          ),
-          Divider(),
-          // delete all notes
-          ListTile(
-            title: Text("Delete All Notes"),
-            leading: Icon(Icons.notes),
-            onTap: () {
-              showDialog(
-                context: context,
-                builder: (context) {return AlertDialog(
-                  title: Text("Are you sure?"),
-                  content: Text("All of your notes will be deleted forever."),
-                  actions: [
-                    // no
-                    TextButton(
-                      child: Text("Cancel"),
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                    ),
-                    // yes
-                    TextButton(
-                      child: Text("OK"),
-                      onPressed: () {
-                        noteList = [];
-                        saveNoteList();
-                        Phoenix.rebirth(context);
-                      },
-                    ),
-                  ],
-                );}
-              );
-            },
-          ),
-          // delete all tasks
-          ListTile(
-            title: Text("Delete All Tasks"),
-            leading: Icon(Icons.task_alt),
-            onTap: () {
-              showDialog(
-                context: context,
-                builder: (context) {return AlertDialog(
-                  title: Text("Are you sure?"),
-                  content: Text("All of your tasks will be deleted forever."),
-                  actions: [
-                    // no
-                    TextButton(
-                      child: Text("Cancel"),
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                    ),
-                    // yes
-                    TextButton(
-                      child: Text("OK"),
-                      onPressed: () {
-                        taskList = [];
-                        saveTaskList();
-                        Phoenix.rebirth(context);
-                      },
-                    ),
-                  ],
-                );}
-              );
-            },
-          ),
-          Divider(),
-          // report bug
-          ListTile(
-            title: Text("Report a Bug"),
-            leading: Icon(Icons.bug_report),
-            onTap: () {launchUrl(Uri.parse("https://github.com/modmonster/textedit/issues/new"));},
-          ),
-          // about
-          ListTile(
-            title: Text("About TextEdit"),
-            leading: Icon(Icons.info),
-            onTap: () {Navigator.pushNamed(context, "/settings/about");},
+                },
+              ),
+              Divider(),
+              // report bug
+              ListTile(
+                title: Text("View on GitHub"),
+                leading: Icon(Icons.code),
+                onTap: () {launchUrl(Uri.parse("https://github.com/modmonster/textedit"));},
+              ),
+              ListTile(
+                title: Text("Report a bug"),
+                leading: Icon(Icons.bug_report_outlined),
+                onTap: () {launchUrl(Uri.parse("https://github.com/modmonster/textedit/issues/new"));},
+              ),
+              // about
+              AboutListTile(
+                icon: Icon(Icons.info_outline),
+                applicationName: "TextEdit",
+                applicationIcon: Image.asset(
+                  "assets/icon-circle.png",
+                  width: 48,
+                ),
+                applicationVersion: version,
+                aboutBoxChildren: [
+                  Text("A simple text editor and to-do list")
+                ],
+              ),
+            ],
           ),
         ],
       ),
