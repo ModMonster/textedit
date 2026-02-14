@@ -98,7 +98,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 ListTile(
                   title: Text("Note density"),
                   leading: Icon(Icons.view_compact_rounded),
-                  subtitle: Text("Comfortable"),
+                  subtitle: Text(box.get("density") == 1? "Compact" : "Default"),
                   onTap: () {
                     Navigator.pushNamed(context, "/settings/note_spacing");
                   },
